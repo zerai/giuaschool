@@ -47,6 +47,7 @@
         "twig/twig": "^3.0"
     },
     "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.5",
         "dmore/chrome-mink-driver": "^2.8",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fakerphp/faker": "^1.15",
@@ -71,6 +72,7 @@
         },
         "sort-packages": true,
         "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "symfony/flex": true
         }
@@ -109,6 +111,9 @@
         "symfony/symfony": "*"
     },
     "extra": {
+        "bamarni-bin": {
+            "target-directory": "tools"
+        },
         "symfony": {
             "allow-contrib": false,
             "require": "4.4.*"

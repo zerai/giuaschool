@@ -44,3 +44,11 @@
 /.env.local
 /.env.local.php
 /last_deploy.date
+
+
+/.idea/
+/tools/
+docker-compose*
+ecs*
+psalm*
+rector*
