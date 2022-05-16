@@ -1,4 +1,5 @@
-FROM ghcr.io/trinko/giuaschool-dev:latest
+ARG BASE_IMAGE=ghcr.io/trinko/giuaschool-dev:latest
+FROM $BASE_IMAGE
 
 ### Unit test environment
 ARG DEBIAN_FRONTEND=noninteractive
