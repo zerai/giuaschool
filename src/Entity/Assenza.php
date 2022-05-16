@@ -118,7 +118,7 @@ class Assenza {
   private $docente;
 
   /**
-   * @var Docente $docenteGiustifica Docente che giustifica l'assenza
+   * @var Docente|null $docenteGiustifica Docente che giustifica l'assenza
    *
    * @ORM\ManyToOne(targetEntity="Docente")
    * @ORM\JoinColumn(nullable=true)
@@ -126,7 +126,7 @@ class Assenza {
   private $docenteGiustifica;
 
   /**
-   * @var Utente $utenteGiustifica Utente (Genitore/Alunno) che giustifica l'assenza
+   * @var Utente|null $utenteGiustifica Utente (Genitore/Alunno) che giustifica l'assenza
    *
    * @ORM\ManyToOne(targetEntity="Utente")
    * @ORM\JoinColumn(nullable=true)
@@ -141,7 +141,7 @@ class Assenza {
    *
    * @ORM\PrePersist
    */
-  public function onCreateTrigger() {
+  public function onCreateTrigger(): void {
     // inserisce data/ora di creazione
     $this->creato = new \DateTime();
     $this->modificato = $this->creato;
@@ -152,7 +152,7 @@ class Assenza {
    *
    * @ORM\PreUpdate
    */
-  public function onChangeTrigger() {
+  public function onChangeTrigger(): void {
     // aggiorna data/ora di modifica
     $this->modificato = new \DateTime();
   }
@@ -373,7 +373,7 @@ class Assenza {
   /**
    * Restituisce il docente che giustifica l'assenza
    *
-   * @return Docente Docente che giustifica l'assenza
+   * @return Docente|null Docente che giustifica l'assenza
    */
   public function getDocenteGiustifica() {
     return $this->docenteGiustifica;
@@ -382,7 +382,7 @@ class Assenza {
   /**
    * Modifica il docente che giustifica l'assenza
    *
-   * @param Docente $docenteGiustifica Docente che giustifica l'assenza
+   * @param Docente|null $docenteGiustifica Docente che giustifica l'assenza
    *
    * @return Assenza Oggetto Assenza
    */
@@ -394,7 +394,7 @@ class Assenza {
   /**
    * Restituisce l'utente (Genitore/Alunno) che giustifica l'assenza
    *
-   * @return Utente Utente (Genitore/Alunno) che giustifica l'assenza
+   * @return Utente|null Utente (Genitore/Alunno) che giustifica l'assenza
    */
   public function getUtenteGiustifica() {
     return $this->utenteGiustifica;
@@ -403,7 +403,7 @@ class Assenza {
   /**
    * Modifica l'utente (Genitore/Alunno) che giustifica l'assenza
    *
-   * @param Utente $utenteGiustifica Utente (Genitore/Alunno) che giustifica l'assenza
+   * @param Utente|null $utenteGiustifica Utente (Genitore/Alunno) che giustifica l'assenza
    *
    * @return Assenza Oggetto modificato
    */
