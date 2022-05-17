@@ -9,7 +9,7 @@ on: [ push ]
 jobs:
   phpunit-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    #timeout-minutes: 30
     services:
       mysql:
         image: mariadb:10.3.29

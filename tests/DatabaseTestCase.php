@@ -434,26 +434,25 @@ class DatabaseTestCase extends KernelTestCase {
    * @return bool Vero se il comando SQL è ammissibile
    */
   private function isValidSql($sql): bool {
-//    // effettua il parsing del comando
-//    $parser = new Parser($sql);
-//    $stmt = isset($parser->statements[0]) ? $parser->statements[0] : null;
-//    if ($stmt instanceOf InsertStatement) {
-//      // insert
-//      return $this->isValidSqlInsert($stmt);
-//    } elseif ($stmt instanceOf UpdateStatement) {
-//      // update
-//      return $this->isValidSqlUpdate($stmt);
-//    } elseif ($stmt instanceOf DeleteStatement) {
-//      // delete
-//      return $this->isValidSqlDelete($stmt);
-//    } elseif ($stmt instanceOf SelectStatement) {
-//      // select
-//      return $this->isValidSqlSelect($stmt);
-//    } else {
-//      // altro comando
-//      return $this->isValidSqlCommand($parser->list->tokens[0]->token, $stmt);
-//    }
-      return true;
+    // effettua il parsing del comando
+    $parser = new Parser($sql);
+    $stmt = isset($parser->statements[0]) ? $parser->statements[0] : null;
+    if ($stmt instanceOf InsertStatement) {
+      // insert
+      return $this->isValidSqlInsert($stmt);
+    } elseif ($stmt instanceOf UpdateStatement) {
+      // update
+      return $this->isValidSqlUpdate($stmt);
+    } elseif ($stmt instanceOf DeleteStatement) {
+      // delete
+      return $this->isValidSqlDelete($stmt);
+    } elseif ($stmt instanceOf SelectStatement) {
+      // select
+      return $this->isValidSqlSelect($stmt);
+    } else {
+      // altro comando
+      return $this->isValidSqlCommand($parser->list->tokens[0]->token, $stmt);
+    }
   }
 
   /**
