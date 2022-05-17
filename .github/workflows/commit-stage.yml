@@ -1,0 +1,92 @@
+name: Commit stage
+
+on: [ push ]
+
+
+
+
+
+jobs:
+  phpunit-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mysql:
+        image: mariadb:10.3.29
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+          MYSQL_DATABASE: symfony_test
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    strategy:
+      matrix:
+        php:
+          - '7.4'
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup cache environment
+        id: cache-php-extensions
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ctype, curl, gd, iconv, intl, opcache, openssl, mbstring, mysql, pdo_sqlite, xsl
+          key: cache-php-extensions-v1
+
+      - name: Cache extensions
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.cache-php-extensions.outputs.dir }}
+          key: ${{ steps.cache-php-extensions.outputs.key }}
+          restore-keys: cache-php-extensions-v1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ctype, curl, gd, iconv, intl, opcache, openssl, mbstring, mysql, pdo_sqlite, xsl
+          ini-values: memory_limit=-1
+          coverage: none
+          tools: symfony
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --ansi
+
+#      - name: Install phpunit dependencies
+#        run: bin/phpunit install
+
+      - name: Run Migration & test fixtures
+        run: |
+          php bin/console doctrine:schema:update --force -e test
+        env:
+          DATABASE_URL: mysql://root:test@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony_test?serverVersion=mariadb-10.3.29
+
+#      - name: Run database schema mapping validation
+#        run: ./bin/console doctrine:schema:validate -e test
+#        env:
+#          DATABASE_URL: mysql://root:test@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony_test?serverVersion=mariadb-10.3.29
+#        continue-on-error: true
+
+      - name: Run test suite
+        run: bin/phpunit tests/UnitTest
+        env:
+          DATABASE_URL: mysql://test:test@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony_test?serverVersion=mariadb-10.3.29
+
+
