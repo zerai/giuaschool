@@ -72,7 +72,7 @@ jobs:
 #      - name: Install phpunit dependencies
 #        run: bin/phpunit install
 
-      - name: Run Migration & test fixtures
+      - name: Prepare test database (schema:update)
         run: |
           php bin/console doctrine:schema:update --force -e test
         env:
@@ -85,7 +85,7 @@ jobs:
 #        continue-on-error: true
 
       - name: Run test suite
-        run: bin/phpunit tests/UnitTest
+        run: bin/phpunit tests/UnitTest -vvv -d
         env:
           DATABASE_URL: mysql://test:test@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/symfony_test?serverVersion=mariadb-10.3.29
 
